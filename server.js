@@ -14,7 +14,7 @@ app.use(handlebars({
 passport.use(new FacebookStrategy({
 	clientID: process.env.FACEBOOK_APPID,
 	clientSecret: process.env.FACEBOOK_SECRET,
-	callbackURL: "http://www.dnix.us"
+	callbackURL: "http://" + process.env.HOSTNAME + "/"
 },
 	function(accessToken, refreshToken, profile, done) {
 		console.log("Received token for " + profile.name.familyName);
