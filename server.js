@@ -11,9 +11,15 @@ app.use(handlebars({
 
 app.use(routing(app));
 
+app.route('/')
+	.get(function * (next) {
+		yield this.render('welcome', {});
+		yield next;
+	});
+
 app.route('/signup')
 	.get(function * (next) {
-		yield this.render('index', {
+		yield this.render('signup', {
 			name: "Parashat Eikev",
 			duties: [{
 				description: "Torah",
