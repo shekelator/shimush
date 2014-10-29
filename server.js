@@ -14,7 +14,7 @@ app.use(handlebars({
 passport.use(new FacebookStrategy({
 	clientID: process.env.FACEBOOK_APPID,
 	clientSecret: process.env.FACEBOOK_SECRET,
-	callbackURL: "http://" + process.env.HOSTNAME + "/callback"
+	callbackURL: "http://" + process.env.HOSTNAME + "/auth/facebook/callback"
 },
 	function(accessToken, refreshToken, profile, done) {
 		console.log("Received token for " + profile.name.familyName);
@@ -24,6 +24,14 @@ passport.use(new FacebookStrategy({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(routing(app));
+
+app.use(function*(next) {
+	if(this.isAuthenticated()) {
+		yield next;
+	} else {
+		this.redirect("/");
+	}
+});
 
 app.route('/')
 	.get(function * (next) {
@@ -60,13 +68,6 @@ app.route('/failed')
 		yield this.render('failed', {});
 	});
 
-app.use(function*(next) {
-	if(this.isAuthenticated()) {
-		yield next;
-	} else {
-		this.redirect("/");
-	}
-});
 
 var port = process.env.PORT || 3000
 app.listen(port);
