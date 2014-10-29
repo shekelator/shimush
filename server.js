@@ -34,7 +34,7 @@ app.route('/')
 app.route('/auth/facebook').get(passport.authenticate('facebook'));
 
 app.route('/auth/facebook/callback').get(
-	passport.authenticate('facebook', {successRedirect: '/', failureRedirect: '/loginFailure'})
+	passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/'})
 );
 
 app.route('/signup')
@@ -53,7 +53,15 @@ app.route('/signup')
 		});
 
 		yield next;
-	})
+	});
+
+app.use(function*(next) {
+	if(this.isAuthenticated()) {
+		yield next;
+	} else {
+		this.redirect("/");
+	}
+});
 
 var port = process.env.PORT || 3000
 app.listen(port);
