@@ -24,6 +24,7 @@ passport.use(new FacebookStrategy({
 app.use(passport.initialize());
 app.use(passport.session());
 
+/*
 app.use(function*(next) {
 	if(this.isAuthenticated()) {
 		yield next;
@@ -31,6 +32,8 @@ app.use(function*(next) {
 		this.redirect("/");
 	}
 });
+*/
+
 app.use(routing(app));
 
 app.route('/')
