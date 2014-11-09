@@ -60,6 +60,7 @@ app.route('/signup')
 
 app.route('/failed')
 	.get(function*(next) {
+		console.log("Failed route");
 		yield this.render('failed', {});
 	});
 
