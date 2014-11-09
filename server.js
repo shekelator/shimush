@@ -42,11 +42,13 @@ app.route('/')
 app.route('/auth/facebook').get(passport.authenticate('facebook'));
 
 app.route('/auth/facebook/callback').get(
-	passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/failed'})
+	passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/failed'});
+	yield next;
 );
 
 app.route('/signup')
 	.get(function * (next) {
+		console.log("in signup GET handler")
 		yield this.render('signup', {
 			name: "Parashat Eikev",
 			duties: [{
