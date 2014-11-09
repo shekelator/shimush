@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "koa": "0.9.x",
+    "koa-passport": "^1.1.3",
     "koa-routing": "^1.2.9",
     "koa-views": "^2.1.0",
     "lodash-node": "2.4.x",

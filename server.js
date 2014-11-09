@@ -25,14 +25,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(routing(app));
 
-app.use(function*(next) {
-	if(this.isAuthenticated()) {
-		yield next;
-	} else {
-		this.redirect("/");
-	}
-});
-
 app.route('/')
 	.get(function * (next) {
 		yield this.render('welcome', {});
@@ -42,13 +34,14 @@ app.route('/')
 app.route('/auth/facebook').get(passport.authenticate('facebook'));
 
 app.route('/auth/facebook/callback').get(
-	yield passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/failed'});
-	yield next;
+	passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/failed'});
 );
 
 app.route('/signup')
 	.get(function * (next) {
-		console.log("in signup GET handler")
+		console.log("in signup GET handler");
+		console.log("isAuthenticated = " + this.isAuthenticated());
+
 		yield this.render('signup', {
 			name: "Parashat Eikev",
 			duties: [{
@@ -70,6 +63,14 @@ app.route('/failed')
 		yield this.render('failed', {});
 	});
 
+
+// app.use(function*(next) {
+// 	if(this.isAuthenticated()) {
+// 		yield next;
+// 	} else {
+// 		this.redirect("/");
+// 	}
+// });
 
 var port = process.env.PORT || 3000
 app.listen(port);
