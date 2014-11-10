@@ -11,10 +11,14 @@ app.use(handlebars({
 	defaultLayout: "main"
 }));
 
+
+var facebookAppId = process.env.FACEBOOK_APPID || "abcde123";
+var facebookSecret = process.env.FACEBOOK_SECRET || "lskjdf0923jfsdf";
+var hostname = process.env.HOSTNAME || "localhost";
 passport.use(new FacebookStrategy({
-	clientID: process.env.FACEBOOK_APPID,
-	clientSecret: process.env.FACEBOOK_SECRET,
-	callbackURL: "http://" + process.env.HOSTNAME + "/auth/facebook/callback"
+	clientID: facebookAppId,
+	clientSecret: facebookSecret,
+	callbackURL: "http://" + hostname + "/auth/facebook/callback"
 },
 	function(accessToken, refreshToken, profile, done) {
 		console.log("Received token for " + profile.name.familyName);
@@ -34,8 +38,17 @@ app.route('/')
 app.route('/auth/facebook').get(passport.authenticate('facebook'));
 
 app.route('/auth/facebook/callback').get(
-	passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/failed'});
+	passport.authenticate('facebook', {successRedirect: '/signup', failureRedirect: '/failed'})
 );
+
+app.route('/auth/login').get(function*(next) {
+	console.log("In login screen");
+	yield this.render("login");
+	yield next;
+}).post(passport.authenticate('local', {
+	successRedirect: 'signup',
+	failureRedirect: '/'
+}));
 
 app.route('/signup')
 	.get(function * (next) {
